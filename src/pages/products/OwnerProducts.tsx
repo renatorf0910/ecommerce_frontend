@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CreateProductModal from "./CreateProductModal";
+import { getProductsOwner } from "@/services/api";
+import Loading from "@/loading/Loading";
 
 type Product = {
     id: number;
@@ -23,35 +25,6 @@ const statusColorMap = {
     vendido: "bg-gray-400",
 };
 
-const mockProducts: Product[] = [
-    {
-        id: 1,
-        title: "Produto A",
-        description: "Descrição do produto A",
-        price: "120",
-        image: "https://github.com/renatorf0910.png",
-        color: "orange",
-        status: "ativo",
-    },
-    {
-        id: 2,
-        title: "Produto B",
-        description: "Descrição do produto B",
-        price: "95",
-        image: "https://github.com/renatorf0910.png",
-        color: "cyan",
-        status: "vendido",
-    },
-    {
-        id: 3,
-        title: "Produto C",
-        description: "Descrição do produto C",
-        price: "149",
-        image: "https://github.com/renatorf0910.png",
-        color: "pink",
-        status: "ativo",
-    },
-];
 
 const ProductCard: React.FC<Product> = (product) => (
     <motion.div
@@ -61,7 +34,6 @@ const ProductCard: React.FC<Product> = (product) => (
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="w-full max-w-[260px] rounded-xl shadow-md overflow-hidden bg-white relative"
     >
-        {/* Status Badge */}
         <div
             className={`absolute top-3 left-3 text-xs px-3 py-1 rounded-full text-white font-semibold ${statusColorMap[product.status]
                 }`}
@@ -88,8 +60,43 @@ const ProductCard: React.FC<Product> = (product) => (
     </motion.div>
 );
 
+
 const OwnerProducts: React.FC = () => {
+    const [products, setProducts] = useState<Product[]>([]);
     const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+
+            try {
+                const data = await getProductsOwner();
+                const mappedProducts: Product[] = data.map((item: any) => ({
+                    id: item.id,
+                    title: item.name,
+                    description: item.description || "Sem descrição",
+                    price: item.price,
+                    image: item.images?.[0]?.image || "https://via.placeholder.com/150",
+                    color: "orange",
+                    status: item.is_available ? "ativo" : "vendido",
+                }));
+
+                setProducts(mappedProducts);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <Loading />;
+    }
+
     return (
         <div className="p-10 max-w-full mx-auto w-full">
             <div className="flex justify-between mb-6">
@@ -104,12 +111,13 @@ const OwnerProducts: React.FC = () => {
             <CreateProductModal isOpen={showModal} onClose={() => setShowModal(false)} />
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-8 justify-items-center">
-                {mockProducts.map((product, index) => (
-                    <ProductCard key={`${product.id}-${index}`} {...product} />
+                {products?.map((product) => (
+                    <ProductCard key={product.id} {...product} />
                 ))}
             </div>
         </div>
     );
 };
+
 
 export default OwnerProducts;

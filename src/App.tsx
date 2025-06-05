@@ -10,6 +10,7 @@ import Footer from "./pages/footer/Footer";
 import EditProfile from "./pages/user/EditProfile";
 import { Chat } from "./chat/Chat";
 import OwnerProducts from "./pages/products/OwnerProducts";
+import ProductDetail from "./pages/products/ProductDetail";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ function App() {
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/myownproducts" element={<OwnerProducts />} />
+          <Route path="/produto/:id" element={<ProductDetail />} />
         </Routes>
       </main>
       {showHeaderFooter && <Footer />}

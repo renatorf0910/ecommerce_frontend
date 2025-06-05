@@ -95,5 +95,19 @@ export const createProduct = async (formData: FormData) => {
   return response.data;
 };
 
+export const getProducts = async () => {
+  const response = await api.get('products/');
+  return response.data;
+};
+
+export const getProductsOwner = async () => {
+  const response = await api.get('products/myproducts/');
+  return response.data;
+};
+
+export const getProductById = async (id: string) => {
+  const response = await api.get(`products/product/${id}/`);
+  return response.data;
+};
 
 export default api;
