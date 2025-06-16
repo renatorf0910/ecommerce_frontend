@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
@@ -24,21 +23,20 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {showHeaderFooter && <Header />}
+      <Header />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/myownproducts" element={<OwnerProducts />} />
           <Route path="/produto/:id" element={<ProductDetail />} />
         </Routes>
       </main>
-      {showHeaderFooter && <Footer />}
+      <Footer />
     </div>
   );
 }

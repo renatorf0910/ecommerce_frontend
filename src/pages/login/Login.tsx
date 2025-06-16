@@ -15,10 +15,8 @@ export default function Login() {
 
     try {
       await login({ username, password });
-      console.log("Logado com sucesso");
       window.location.href = "/"; 
     } catch (err: any) {
-      console.error("Erro no login:", err);
       setErrorMsg("Usuário ou senha inválidos");
     }
   };

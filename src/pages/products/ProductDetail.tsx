@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "@/services/api";
+import { getProductById, getProductImageById } from "@/services/api";
 import Loading from "@/loading/Loading";
 
 interface Product {
@@ -16,11 +16,20 @@ interface Product {
     images: { image: string }[];
 }
 
+interface ProductImage {
+    id: number;
+    image: {image: string}[];
+    alt_text: string;
+    is_thumbnail: boolean;
+}
+
 const ProductDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product | null>(null);
+    const [imageProduct, setImageProduct] = useState<ProductImage | null>(null);
     const [loading, setLoading] = useState(true);
-    console.log('entire')
+
+    
     useEffect(() => {
         if (!id) return;
 
@@ -38,13 +47,32 @@ const ProductDetail: React.FC = () => {
         fetchProduct();
     }, [id]);
 
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchProductImage = async () => {
+            try {
+                const data = await getProductImageById(id);
+                setImageProduct(data);
+            } catch (err) {
+                console.error("Erro ao buscar imagem do produto:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProductImage();
+    }, [id]);
+
+    console.log('imageProduct: ', imageProduct)
+
+
     if (loading) return <Loading />;
-    console.log('product: ', product)
+    console.log('product: ', product?.images[0]?.image)
     if (!product) return <div className="text-center mt-10 text-red-600">Produto não encontrado.</div>;
 
     return (
-        <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-10">
-            {/* Imagem do Produto */}
+        <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-20">
             <div className="flex justify-center items-center">
                 <img
                     src={product.images?.[0]?.image || "https://via.placeholder.com/400"}
@@ -52,8 +80,6 @@ const ProductDetail: React.FC = () => {
                     className="rounded-xl border shadow-md w-full max-w-sm object-cover"
                 />
             </div>
-
-            {/* Detalhes */}
             <div>
                 <h1 className="text-3xl font-bold text-blue-900 mb-4">{product.name}</h1>
 

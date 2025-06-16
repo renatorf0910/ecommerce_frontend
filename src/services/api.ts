@@ -110,4 +110,9 @@ export const getProductById = async (id: string) => {
   return response.data;
 };
 
+export const getProductImageById = async (id: string) => {
+  const response = await api.get(`products/product_image/${id}/`);
+  return response.data;
+};
+
 export default api;
