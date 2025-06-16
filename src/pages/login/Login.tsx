@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { login } from "@/services/api"; // importa a função login que criamos
+import { login } from "@/services/api";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -11,11 +11,10 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); // previne reload da página
+    e.preventDefault();
 
     try {
-      await login({ username, password }); // se seu backend usa username, pode ajustar pra { username, password }
-
+      await login({ username, password });
       console.log("Logado com sucesso");
       window.location.href = "/"; 
     } catch (err: any) {

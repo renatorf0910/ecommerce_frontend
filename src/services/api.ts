@@ -30,7 +30,7 @@ api.interceptors.response.use(
 );
 
 
-export async function registerAndLogin(userData: { email: string; username: string; password: string }) {
+export async function registerAndLogin(userData: { email: string; username: string; password: string, password_confirm: string, phone: string  }) {
   try {
     await api.post('register/', userData);
     const loginResponse = await login({ username: userData.username, password: userData.password });

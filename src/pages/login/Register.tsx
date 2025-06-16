@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import clsx from "clsx";
+import { registerAndLogin } from "@/services/api";
 
 export default function Register() {
   const [password, setPassword] = useState("");
+  const [password_confirm, setPassword_confirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
 
   const passwordValidations = {
     length: password.length >= 8,
@@ -18,6 +22,18 @@ export default function Register() {
     number: /[0-9]/.test(password),
     symbol: /[!@#$%^&*]/.test(password),
   };
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (password !== password_confirm) return;
+
+    try {
+      await registerAndLogin({ email, username, password, password_confirm, phone });
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-gradient-x">
@@ -36,10 +52,10 @@ export default function Register() {
         <Card className="shadow-2xl border-none rounded-2xl bg-white/90 backdrop-blur-lg">
           <CardContent className="p-8 space-y-6">
             <h2 className="text-2xl font-bold text-center text-gray-800">Criar Conta</h2>
-            <form className="space-y-4">
-              <Input required type="text" placeholder="Nome completo" />
-              <Input required type="email" placeholder="Email" />
-              <Input required type="tel" placeholder="Telefone" />
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <Input required type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <Input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input required type="tel" placeholder="Telefone" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
               <div className="relative">
                 <Input
@@ -77,8 +93,8 @@ export default function Register() {
                   required
                   type={showConfirm ? "text" : "password"}
                   placeholder="Confirmar senha"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={password_confirm}
+                  onChange={(e) => setPassword_confirm(e.target.value)}
                 />
                 <div
                   className="absolute right-3 top-2.5 cursor-pointer"
