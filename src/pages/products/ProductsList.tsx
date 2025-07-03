@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+// pages/ProductsList.tsx
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getProducts } from "@/services/api";
 import Loading from "@/loading/Loading";
 import { Link } from "react-router-dom";
+import { useCart, CartProvider } from "@/hooks/CartContext";
 
 type Product = {
   id: number;
@@ -16,40 +18,11 @@ type Product = {
   }[];
 };
 
-type CartContextType = {
-  cart: Product[];
-  addToCart: (product: Product) => void;
-};
-
-const CartContext = createContext<CartContextType | undefined>(undefined);
-
-const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within CartProvider");
-  return context;
-};
-
-const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<Product[]>([]);
-
-  const addToCart = (product: Product) => {
-    setCart((prev) => [...prev, product]);
-  };
-
-  return (
-    <CartContext.Provider value={{ cart, addToCart }}>
-      {children}
-    </CartContext.Provider>
-  );
-};
-
-
 const colorMap = {
   orange: "bg-orange-400",
   cyan: "bg-cyan-500",
   pink: "bg-pink-300",
 };
-
 
 const ProductCard: React.FC<Product> = (product) => {
   const { addToCart } = useCart();
@@ -96,8 +69,6 @@ const ProductCard: React.FC<Product> = (product) => {
             </AnimatePresence>
           )}
 
-
-
           {product.images.length > 1 && (
             <>
               <button
@@ -122,11 +93,10 @@ const ProductCard: React.FC<Product> = (product) => {
           <div className="my-4 text-blue-800 font-bold text-xl">${product.price}</div>
         </div>
       </Link>
-
       <div className="flex justify-center">
         <button
           className="bg-blue-900 text-white text-sm px-4 py-2 rounded-full hover:bg-blue-800 transition mb-3"
-          onClick={() => addToCart(product)}
+          onClick={() => addToCart(product.id)}
         >
           ADD TO CART
         </button>
@@ -154,13 +124,10 @@ const ProductsList: React.FC = () => {
     fetchProducts();
   }, []);
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className="p-10 max-w-full mx-auto w-full">
-
       <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-8 justify-items-center">
         {products.map((product, index) => (
           <ProductCard key={`${product.id}-${index}`} {...product} />
@@ -169,6 +136,7 @@ const ProductsList: React.FC = () => {
     </div>
   );
 };
+
 const ProductsListWithProvider: React.FC = () => (
   <CartProvider>
     <ProductsList />

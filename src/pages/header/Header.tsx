@@ -14,14 +14,17 @@ import {
   FiBarChart,
   FiPlusCircle,
 } from "react-icons/fi";
+import { useCart } from "@/hooks/CartContext";
 
 export default function Header() {
+  const { cart } = useCart();
   const [username, setUsername] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [cartCount, setCartCount] = useState(3); // Mock: quantidade de itens no carrinho
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const cartCount = cart.length;
+  console.log(cart.length)
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -80,26 +83,17 @@ export default function Header() {
 
       <nav className="hidden md:flex items-center space-x-6">
 
-        <a
-          href="/favorites"
-          className="flex items-center text-gray-700 hover:text-indigo-600 transition space-x-1"
-        >
+        <a href="/favorites" className="flex items-center text-gray-700 hover:text-indigo-600 transition space-x-1">
           <FiHeart size={20} />
           <span className="text-sm">Favoritos</span>
         </a>
 
-        <a
-          href="/orders"
-          className="flex items-center text-gray-700 hover:text-indigo-600 transition space-x-1"
-        >
+        <a href="/orders" className="flex items-center text-gray-700 hover:text-indigo-600 transition space-x-1">
           <FiPackage size={20} />
           <span className="text-sm">Meus Pedidos</span>
         </a>
 
-        <a
-          href="/cart"
-          className="relative flex items-center text-gray-700 hover:text-indigo-600 transition"
-        >
+        <a href="/cart" className="relative flex items-center text-gray-700 hover:text-indigo-600 transition">
           <FiShoppingCart size={24} />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-3 bg-red-600 text-white text-xs rounded-full px-2">
@@ -107,15 +101,6 @@ export default function Header() {
             </span>
           )}
         </a>
-
-        {/* <a
-          href="/sell"
-          className="flex items-center space-x-1 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-semibold px-3 py-1 rounded-md transition"
-        >
-          <FiPlusCircle size={20} />
-          <span>Vender</span>
-        </a> */}
-
 
         <button
           aria-label="Notificações"
@@ -142,55 +127,33 @@ export default function Header() {
             </button>
 
             {showDropdown && (
-              <div
-                className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg z-20 animate-fadeIn transition-all duration-200"
-              >
-                <a
-                  href="/profile/edit"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
-                  onClick={() => setShowDropdown(false)}
-                >
+              <div className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg z-20 animate-fadeIn transition-all duration-200">
+                <a href="/profile/edit" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
                   <FiEdit2 className="mr-2" /> Editar Perfil
                 </a>
-                <a
-                  href="/orders"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
-                  onClick={() => setShowDropdown(false)}
-                >
+                <a href="/orders" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
                   <FiPackage className="mr-2" /> Meus Pedidos
                 </a>
-                <a
-                  href="/myownproducts"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
-                  onClick={() => setShowDropdown(false)}
-                >
+                <a href="/myownproducts" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
                   <FiPlusCircle className="mr-2" /> Minhas vendas
                 </a>
-                <a href="/contact"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
-                  onClick={() => setShowDropdown(false)}
-                >
-                  <FiBarChart className="mr-2" />Contato
+                <a href="/contact" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                  <FiBarChart className="mr-2" /> Contato
                 </a>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
+                  className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                 >
                   <FiLogOut className="mr-2" /> Logout
                 </button>
               </div>
             )}
-
           </div>
         ) : (
           <>
-            <a href="/login">
-              <Button variant="outline">Login</Button>
-            </a>
-            <a href="/register">
-              <Button>Register</Button>
-            </a>
+            <a href="/login"><Button variant="outline">Login</Button></a>
+            <a href="/register"><Button>Register</Button></a>
           </>
         )}
       </nav>
@@ -204,9 +167,7 @@ export default function Header() {
       </button>
 
       {showMobileMenu && (
-        <div
-          className="absolute top-full left-0 w-full bg-white shadow-lg border-t md:hidden z-40 transform transition-all duration-300 ease-out animate-slideDown"
-        >
+        <div className="absolute top-full left-0 w-full bg-white shadow-lg border-t md:hidden z-40 animate-slideDown">
           <nav className="flex flex-col p-4 space-y-4 text-gray-700">
             <a href="/" className="font-semibold hover:text-indigo-600 transition">Home</a>
             <a href="/contact" className="hover:text-indigo-600 transition">Contato</a>
@@ -246,7 +207,6 @@ export default function Header() {
           </nav>
         </div>
       )}
-
     </header>
   );
 }
