@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductById, getProductImageById } from "@/services/api";
 import Loading from "@/loading/Loading";
+import FavoriteButton from "./Favorites/FavoriteButton";
 
 interface Product {
     id: number;
@@ -18,7 +19,7 @@ interface Product {
 
 interface ProductImage {
     id: number;
-    image: {image: string}[];
+    image: { image: string }[];
     alt_text: string;
     is_thumbnail: boolean;
 }
@@ -29,7 +30,7 @@ const ProductDetail: React.FC = () => {
     const [imageProduct, setImageProduct] = useState<ProductImage | null>(null);
     const [loading, setLoading] = useState(true);
 
-    
+
     useEffect(() => {
         if (!id) return;
 
@@ -81,7 +82,8 @@ const ProductDetail: React.FC = () => {
                 />
             </div>
             <div>
-                <h1 className="text-3xl font-bold text-blue-900 mb-4">{product.name}</h1>
+                <h1 className="text-3xl font-bold text-blue-900">{product.name}</h1>
+
 
                 <p className="text-gray-700 mb-2">{product.short_description}</p>
                 <p className="text-sm text-gray-500 mb-6">SKU: {product.sku}</p>
@@ -109,10 +111,12 @@ const ProductDetail: React.FC = () => {
                     <p className="text-lg font-semibold text-blue-800 mb-2">Garantia:</p>
                     <p className="text-gray-700">{product.warranty_info || "Sem garantia especificada."}</p>
                 </div>
-
-                <button className="bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition font-semibold">
-                    Adicionar ao Carrinho
-                </button>
+                <div className="flex justify-between items-start mb-4">
+                    <button className="bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition font-semibold">
+                        Adicionar ao Carrinho
+                    </button>
+                    Favoritar produto <FavoriteButton productId={product.id} />
+                </div>
             </div>
         </div>
     );
