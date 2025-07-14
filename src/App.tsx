@@ -10,6 +10,7 @@ import EditProfile from "./pages/user/EditProfile";
 import { Chat } from "./chat/Chat";
 import OwnerProducts from "./pages/products/OwnerProducts";
 import ProductDetail from "./pages/products/ProductDetail";
+import Cart from "./pages/cart/Cart";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/myownproducts" element={<OwnerProducts />} />
           <Route path="/produto/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </main>
       <Footer />

@@ -183,4 +183,12 @@ export const getProductImageById = async (id: string) => {
   return response.data;
 };
 
+
+export const fetchCart = async () => {
+  const response = await api.get('cart/');
+  return response.data;
+}
+
+
+
 export default api;

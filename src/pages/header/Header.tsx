@@ -24,7 +24,7 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const cartCount = cart.length;
-  console.log(cart.length)
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
